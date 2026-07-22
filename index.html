@@ -109,6 +109,11 @@ textarea{resize:vertical;min-height:64px}
 .scheme-box svg{max-width:100%;height:auto}
 .legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:8px;font-size:13px;color:var(--muted)}
 .legend i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.mxt th,.mxt td{padding:4px 7px;font-size:11.5px;text-align:center;white-space:nowrap}
+.mxt tbody td:first-child{font-weight:700;color:var(--accent2)}
+.mx{width:14px;height:14px;border-radius:3px;background:var(--blue);border:none;cursor:pointer;padding:0;vertical-align:middle}
+.mx:hover{background:var(--accent)}
+.mx1{width:12px;height:12px;border-radius:3px;background:var(--muted);display:inline-block;vertical-align:middle}
 
 /* ---------- orders ---------- */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
@@ -429,6 +434,7 @@ footer b{color:var(--muted)}
   <div class="pills" id="sch-pills">
     <button data-sub="sch-yd" class="active">Звезда / Треугольник</button>
     <button data-sub="sch-cap">Конденсаторный пуск</button>
+    <button data-sub="sch-matrix">Пазы × обороты</button>
     <button data-sub="sch-wind">Развёртка обмотки</button>
   </div>
 
@@ -469,12 +475,25 @@ footer b{color:var(--muted)}
     </div>
   </div>
 
+  <div class="subtab" id="sch-matrix">
+    <div class="card">
+      <h3>🧩 Трёхфазные односкоростные: число пазов × частота вращения</h3>
+      <div class="tblwrap"><table id="tbl-mx3" class="mxt"></table></div>
+      <p class="hint">По материалам «Справочника обмотчика асинхронных электродвигателей». Отметка — применяемое сочетание числа пазов статора и синхронной частоты вращения (2p = 6000 / n). Нажатие на отметку открывает построение развёртки обмотки для данного сочетания; для части сочетаний (дробное q) однослойная развёртка не строится — выводится предупреждение.</p>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>🧩 Однофазные: число пазов × частота вращения</h3>
+      <div class="tblwrap"><table id="tbl-mx1" class="mxt"></table></div>
+      <p class="hint">Сочетания приведены справочно. Построение развёрток однофазных обмоток пока не поддерживается. Таблица многоскоростных двигателей будет добавлена по получении продолжения источника.</p>
+    </div>
+  </div>
+
   <div class="subtab" id="sch-wind">
     <div class="card">
       <h3>🌀 Генератор развёртки однослойной обмотки</h3>
       <div class="row">
-        <div><label class="f">Пазов статора, Z₁</label><select id="wg-z"><option>12</option><option selected>24</option><option>36</option><option>48</option></select></div>
-        <div><label class="f">Полюсов, 2p</label><select id="wg-p"><option>2</option><option selected>4</option><option>6</option><option>8</option></select></div>
+        <div><label class="f">Пазов статора, Z₁</label><select id="wg-z"><option>9</option><option>12</option><option>15</option><option>16</option><option>18</option><option selected>24</option><option>27</option><option>28</option><option>30</option><option>32</option><option>33</option><option>36</option><option>40</option><option>41</option><option>42</option><option>45</option><option>48</option><option>51</option><option>54</option><option>60</option><option>63</option><option>72</option><option>75</option><option>90</option></select></div>
+        <div><label class="f">Полюсов, 2p</label><select id="wg-p"><option>2</option><option selected>4</option><option>6</option><option>8</option><option>10</option><option>12</option><option>14</option><option>16</option><option>18</option><option>20</option><option>24</option><option>26</option><option>28</option><option>30</option><option>32</option><option>34</option><option>36</option><option>40</option><option>42</option><option>46</option><option>48</option><option>50</option><option>56</option><option>60</option><option>64</option></select></div>
         <div style="align-self:end"><button class="btn" style="margin-top:0" onclick="drawWinding()">Построить</button></div>
       </div>
       <div class="scheme-box" id="svg-winding" style="margin-top:14px"></div>
@@ -1036,11 +1055,73 @@ function drawWinding(){
     `Пазы фазы A: ${phaseSlots(0)}<br>Пазы фазы B: ${phaseSlots(1)}<br>Пазы фазы C: ${phaseSlots(2)}`;
 }
 
+/* ============ матрицы «пазы × обороты» (по справочнику обмотчика) ============ */
+const MX_RPM3 = [3000,1500,1000,750,600,500,428,375,333,300,250,230,214,200,187,176,166,150,143,130,125,120,107,100,94];
+const MX3 = [
+ [9,[3000,1500,1000,750,600]],
+ [12,[3000,1500,1000,750,600,428]],
+ [15,[3000,1500,1000,750,428,375]],
+ [18,[3000,1500,1000,750,500,375,300]],
+ [24,[3000,1500,1000,750,600,500,375,300,214]],
+ [27,[3000,1500,1000,750,600,500,250,230,214,200]],
+ [30,[3000,1500,1000,750,600,500,375,300]],
+ [33,[3000,1500,750,600,500]],
+ [36,[3000,1500,1000,750,600,500,375,300,250,200,187,150,143]],
+ [41,[1000]],
+ [42,[3000,1500,1000,750,600,428,214]],
+ [45,[3000,1500,1000,750,600,500,428,375,300,250,150,120]],
+ [48,[3000,1500,1000,750,600,500,375,300,250,187,150,107]],
+ [51,[176,130]],
+ [54,[3000,1500,1000,750,600,500,375,333,300,250,230,214,200,187,166,125,100]],
+ [60,[3000,1500,1000,750,600,375,300,250,187,150,120]],
+ [63,[1000,428,214,143,107]],
+ [72,[3000,1500,1000,750,600,500,375,333,300,250,200,187,166,150,125,100,94]],
+ [75,[1500,750,600,300]],
+ [90,[1500,1000,750,600,500,375,300,250,200,187,166,150,125]]
+];
+const MX_RPM1 = [3000,1500,1000,750,600,500,428,375,333,300,250,200,166.6];
+const MX1 = [
+ [12,[3000,1500,1000]],
+ [16,[3000,1500,750]],
+ [18,[3000,1000]],
+ [24,[3000,1500,750,500]],
+ [28,[3000,1500,428]],
+ [30,[3000,1500,1000,600]],
+ [32,[3000,1500,750,333]],
+ [36,[3000,1500,1000,750,500,333]],
+ [40,[750]],
+ [42,[3000,428]],
+ [48,[3000,1500,1000,750,500,375,250]],
+ [54,[3000,1000,500,333]],
+ [60,[1500,1000,600,300,200]],
+ [72,[1500,1000,750,500,375,333,300,250,166.6]]
+];
+function renderMatrix(){
+  const mk = (rpms, rows, click) => {
+    let h = '<thead><tr><th>Пазов Z₁</th>' + rpms.map(r => `<th>${String(r).replace('.',',')}</th>`).join('') + '</tr></thead><tbody>';
+    rows.forEach(pair => {
+      const z = pair[0], list = pair[1];
+      h += `<tr><td>${z}</td>` + rpms.map(r => `<td>${list.indexOf(r) >= 0 ? (click ? `<button class="mx" title="Z₁=${z}, ${r} об/мин" onclick="openWindingFor(${z},${r})"></button>` : '<span class="mx1"></span>') : ''}</td>`).join('') + '</tr>';
+    });
+    return h + '</tbody>';
+  };
+  $('#tbl-mx3').innerHTML = mk(MX_RPM3, MX3, true);
+  $('#tbl-mx1').innerHTML = mk(MX_RPM1, MX1, false);
+}
+window.openWindingFor = (z, rpm) => {
+  const p2 = Math.round(6000 / rpm);
+  $('#wg-z').value = z; $('#wg-p').value = p2;
+  $$('#sch-pills button').forEach(b => b.classList.toggle('active', b.dataset.sub === 'sch-wind'));
+  document.querySelectorAll('#tab-schemes > .subtab').forEach(x => x.classList.toggle('active', x.id === 'sch-wind'));
+  drawWinding();
+  window.scrollTo({top:0});
+};
 $('#svg-star').innerHTML = svgTerm('y');
 $('#svg-delta').innerHTML = svgTerm('d');
 $('#svg-cap').innerHTML = svgCap();
 renderCapTable();
 drawWinding();
+renderMatrix();
 
 /* ============ хранилище ============ */
 let motors = LS.get('motors', []);

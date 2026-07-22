@@ -223,7 +223,7 @@ footer b{color:var(--muted)}
       <thead><tr><th>Тип</th><th class="num">кВт</th><th class="num">2p</th><th class="num">об/мин</th><th class="num">КПД %</th><th class="num">cos φ</th><th class="num">I 380В, А</th><th class="num">Z₁</th><th class="num">Витков в пазу</th><th class="num">Провод, мм</th><th>Обмотка</th><th>Соед.</th><th class="num">Медь ~кг</th><th></th></tr></thead>
       <tbody></tbody>
     </table></div>
-    <p class="hint">Ток: I = P / (√3 · 380 · КПД · cosφ). КПД и cosφ — типовые каталожные; для А2/АО2 — оценка (старая серия, примерно на 2–3% ниже АИР). Обмотка: 1сл. конц. — однослойная концентрическая, 2сл. — двухслойная, «2×…» — две параллельные жилы. Прочерк — данных нет: у 4А/4АМ сетка мощностей как у АИР, но обмоточные данные другие — заноси свои замеры через «⭐ Мои двигатели».</p>
+    <p class="hint">Ток: I = P / (√3 · 380 · КПД · cosφ). КПД и cosφ — типовые каталожные; для А2/АО2 — оценка (старая серия, примерно на 2–3% ниже АИР). Обмотка: 1сл. конц. — однослойная концентрическая, 2сл. — двухслойная, «2×…» — две параллельные жилы. Для 4А/4АМ обмоточные колонки показаны по АИР-аналогу того же габарита: серии родственные, но не идентичные — обязательно сверяй с фактической обмоткой. Прочерк — данных нет: заноси свои замеры через «⭐ Мои двигатели».</p>
   </div>
 
   <div class="subtab" id="ref-wire">
@@ -745,7 +745,7 @@ function nearestAir(p2, P){
 }
 function motorRows(){
   if(passSeries === 'АИР') return AIR_PASS.map(r => ({t:r[0], p:r[1], p2:r[2], n:r[3], eff:r[4], cos:r[5], w:WIND_BY_TYPE[r[0]]}));
-  if(passSeries === '4А') return A4_PASS.map(r => ({t:r[0], p:r[1], p2:r[2], n:r[3], eff:r[4], cos:r[5], w:null}));
+  if(passSeries === '4А') return A4_PASS.map(r => ({t:r[0], p:r[1], p2:r[2], n:r[3], eff:r[4], cos:r[5], w:WIND_BY_TYPE['АИР' + r[0].slice(2)] || null}));
   const N = {2:2860, 4:1430, 6:950, 8:720};
   return AO2_WIND.map(w => {
     const a = nearestAir(w[2], w[1]);
@@ -1044,9 +1044,11 @@ function openMotorDlg(m){
 window.editMotor = id => openMotorDlg(motors.find(m => m.id === id));
 window.delMotor = id => { if(confirm('Удалить запись?')){ motors = motors.filter(m => m.id !== id); LS.set('motors', motors); renderMy(); } };
 window.copyToMy = t => {
-  const r = AIR_WIND.find(x => x[0] === t) || AO2_WIND.find(x => x[0] === t);
+  let r = AIR_WIND.find(x => x[0] === t) || AO2_WIND.find(x => x[0] === t);
+  let note = 'Из справочника (ориентировочно) — проверить при разборке';
+  if(!r && t.indexOf('4А') === 0){ r = AIR_WIND.find(x => x[0] === 'АИР' + t.slice(2)); note = 'По АИР-аналогу (ориентировочно) — проверить при разборке'; }
   if(!r) return;
-  openMotorDlg({type:r[0], kw:r[1], p:r[2], z:r[3], turns:r[4], wire:r[5], scheme:r[6], conn:r[7], note:'Из справочника (ориентировочно) — проверить при разборке'});
+  openMotorDlg({type:t, kw:r[1], p:r[2], z:r[3], turns:r[4], wire:r[5], scheme:r[6], conn:r[7], note});
   goTab('ref');
 };
 $('#btn-add-motor').onclick = () => openMotorDlg({});

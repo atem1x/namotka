@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>НАМОТКА — портал намотчика электродвигателей</title>
-<meta name="description" content="Личный портал намотчика: справочник обмоточных данных АИР, калькуляторы перемотки, схемы обмоток, учёт заказов и склада.">
+<meta name="description" content="Личный портал намотчика: справочник обмоточных данных АИР, калькуляторы перемотки, схемы обмоток и соединений.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Russo+One&display=swap');
@@ -160,8 +160,6 @@ footer b{color:var(--muted)}
       <button data-tab="ref">📖 Справочник</button>
       <button data-tab="calc">🧮 Расчёты</button>
       <button data-tab="schemes">🔌 Схемы</button>
-      <button data-tab="orders">📋 Заказы</button>
-      <button data-tab="stock">📦 Склад</button>
     </nav>
   </div>
 </header>
@@ -179,15 +177,13 @@ footer b{color:var(--muted)}
       </g>
     </svg>
     <h1>Портал <span>намотчика</span><br>электродвигателей</h1>
-    <div class="tagline">Перемотка · Расчёты · Схемы · Заказы</div>
-    <p class="lead">Всё нужное в одном месте: обмоточные данные, таблицы проводов, калькуляторы перемотки, схемы соединений и учёт заказов мастерской — работает даже без интернета.</p>
+    <div class="tagline">Перемотка · Расчёты · Схемы · Справочник</div>
+    <p class="lead">Всё нужное в одном месте: обмоточные данные, таблицы проводов, калькуляторы перемотки и схемы соединений — работает даже без интернета.</p>
   </div>
   <div class="tiles">
     <div class="tile" data-go="ref"><div class="ico">📖</div><h4>Справочник</h4><p>Данные АИР, провода ПЭТВ, подшипники, изоляция + твоя личная база двигателей</p></div>
     <div class="tile" data-go="calc"><div class="ico">🧮</div><h4>Расчёты</h4><p>Пересчёт на другое напряжение, подбор провода, конденсаторы, ток, сопротивление</p></div>
     <div class="tile" data-go="schemes"><div class="ico">🔌</div><h4>Схемы</h4><p>Звезда/треугольник, маркировка выводов, конденсаторный пуск, развёртка обмотки</p></div>
-    <div class="tile" data-go="orders"><div class="ico">📋</div><h4>Заказы</h4><p>Мини-CRM: клиенты, статусы, обмоточные данные, сообщения клиенту в WhatsApp</p></div>
-    <div class="tile" data-go="stock"><div class="ico">📦</div><h4>Склад</h4><p>Провод, лак, подшипники — остатки и минимальные запасы с подсветкой</p></div>
   </div>
   <div class="grid g2" style="margin-top:14px">
     <div class="card">
@@ -199,10 +195,6 @@ footer b{color:var(--muted)}
       • Плотность тока для закрытых двигателей: <b style="color:var(--accent2)">4,5–5,5 А/мм²</b><br>
       • Обороты: 2p=2 → 3000 · 2p=4 → 1500 · 2p=6 → 1000 · 2p=8 → 750
       </p>
-    </div>
-    <div class="card">
-      <h3>📋 Сейчас в работе</h3>
-      <div id="home-orders">Заказов пока нет — добавь первый в разделе «Заказы».</div>
     </div>
   </div>
 </section>
@@ -233,7 +225,7 @@ footer b{color:var(--muted)}
     <div class="warn-note">⚠ Обмоточные данные — <b>ориентировочные</b>, по справочникам для серии АИР (одна из распространённых модификаций). Заводы отличаются! Перед перемоткой всегда записывай фактические данные: число витков, диаметр провода, схему и шаг. Проверенные данные сохраняй во вкладке «⭐ Мои двигатели».</div>
     <input class="search" id="search-wind" placeholder="Поиск: АИР71, 24 паза...">
     <div class="tblwrap"><table id="tbl-wind">
-      <thead><tr><th>Тип</th><th class="num">кВт</th><th class="num">2p</th><th class="num">Пазов Z₁</th><th class="num">Витков в пазу</th><th class="num">провод ПЭТВ, мм</th><th>Обмотка</th><th>Соед.</th><th class="num">Медь ~кг</th><th></th></tr></thead>
+      <thead><tr><th>Тип</th><th class="num">кВт</th><th class="num">2p</th><th class="num">Пазов Z₁</th><th class="num">Витков в пазу</th><th class="num">Провод ПЭТВ, мм</th><th>Обмотка</th><th>Соед.</th><th class="num">Медь ~кг</th><th></th></tr></thead>
       <tbody></tbody>
     </table></div>
     <p class="hint">Обмотка: 1сл. конц. — однослойная концентрическая. Для габаритов 112 и выше данные сильно расходятся по заводам — заноси свои замеры в «Мои двигатели» (кнопка ⭐ копирует строку туда).</p>
@@ -319,8 +311,8 @@ footer b{color:var(--muted)}
   </div>
 
   <div class="subtab" id="ref-my">
-    <p class="section-sub" style="margin-bottom:10px">Твоя личная база проверенных обмоточных данных. Заполняется отсюда, из строк справочника (⭐) или из заказов. Хранится в браузере — делай экспорт!</p>
-    <button class="btn sm" id="btn-add-motor">+ Добавить двигатель</button>
+    <p class="section-sub" style="margin-bottom:10px">Твоя личная база проверенных обмоточных данных. Заполняется отсюда или из строк справочника (⭐). Хранится в этом браузере — не забывай делать резервную копию (Экспорт).</p>
+    <button class="btn sm" id="btn-add-motor">+ Добавить двигатель</button> <button class="btn sm sec" id="btn-export">💾 Экспорт</button> <button class="btn sm sec" id="btn-import">📂 Импорт</button><input type="file" id="import-file" accept=".json" style="display:none">
     <input class="search" id="search-my" placeholder="Поиск по моей базе..." style="margin-top:12px">
     <div class="tblwrap"><table id="tbl-my">
       <thead><tr><th>Тип</th><th class="num">кВт</th><th class="num">2p</th><th class="num">Z₁</th><th class="num">Витков</th><th class="num">Провод</th><th>Схема</th><th>Соед.</th><th>Заметка</th><th></th></tr></thead>
@@ -498,88 +490,7 @@ footer b{color:var(--muted)}
   </div>
 </section>
 
-<!-- ================= ЗАКАЗЫ ================= -->
-<section class="tab" id="tab-orders">
-  <h2 class="section-title">Заказы</h2>
-  <p class="section-sub">Мини-CRM по образцу «Энергоцех»: статусы Принят → В работе → Готов → Выдан, обмоточные данные в заказе и готовые сообщения клиенту.</p>
-  <div class="stats">
-    <div class="stat"><div class="v" id="st-new">0</div><div class="l">Принято</div></div>
-    <div class="stat"><div class="v" id="st-work">0</div><div class="l">В работе</div></div>
-    <div class="stat"><div class="v" id="st-ready">0</div><div class="l">Готово</div></div>
-    <div class="stat"><div class="v" id="st-debt">0 ₴</div><div class="l">Ожидается оплата</div></div>
-  </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
-    <button class="btn sm" id="btn-add-order">+ Новый заказ</button>
-    <button class="btn sm sec" id="btn-export">💾 Экспорт (резервная копия)</button>
-    <button class="btn sm sec" id="btn-import">📂 Импорт</button>
-    <button class="btn sm sec" id="btn-settings">⚙ Мастерская</button>
-    <input type="file" id="import-file" accept=".json" style="display:none">
-  </div>
-  <div class="chipbar" id="order-filter">
-    <button data-f="all" class="active">Все</button>
-    <button data-f="Принят">Принят</button>
-    <button data-f="В работе">В работе</button>
-    <button data-f="Готов">Готов</button>
-    <button data-f="Выдан">Выдан</button>
-    <button data-f="Отменён">Отменён</button>
-  </div>
-  <input class="search" id="search-orders" placeholder="Поиск: клиент, телефон, двигатель, номер...">
-  <div id="orders-list"></div>
-  <div class="empty" id="orders-empty">Заказов пока нет. Нажми «+ Новый заказ».</div>
-</section>
-
-<!-- ================= СКЛАД ================= -->
-<section class="tab" id="tab-stock">
-  <h2 class="section-title">Склад</h2>
-  <p class="section-sub">Материалы мастерской. Позиции с остатком ниже минимума подсвечиваются — пора докупать.</p>
-  <button class="btn sm" id="btn-add-stock">+ Добавить позицию</button>
-  <div class="tblwrap" style="margin-top:12px"><table id="tbl-stock">
-    <thead><tr><th>Наименование</th><th>Категория</th><th class="num">Остаток</th><th class="num">Минимум</th><th>Ед.</th><th></th></tr></thead>
-    <tbody></tbody>
-  </table></div>
-  <div class="empty" id="stock-empty" style="display:none">Склад пуст</div>
-</section>
-
 <!-- ================= ДИАЛОГИ ================= -->
-<dialog id="dlg-order">
-  <h3 id="dlg-order-title">Новый заказ</h3>
-  <form method="dialog" id="form-order">
-    <input type="hidden" id="o-id">
-    <div class="row">
-      <div><label class="f">Дата приёма</label><input type="date" id="o-date"></div>
-      <div><label class="f">Клиент *</label><input type="text" id="o-client" placeholder="Иван / ООО Агро" required></div>
-      <div><label class="f">Телефон</label><input type="tel" id="o-phone" placeholder="+380961234567"></div>
-    </div>
-    <div class="row">
-      <div><label class="f">Двигатель</label><input type="text" id="o-motor" placeholder="АИР80В4"></div>
-      <div><label class="f">кВт</label><input type="number" id="o-kw" step="0.01"></div>
-      <div><label class="f">об/мин</label><input type="number" id="o-rpm"></div>
-    </div>
-    <label class="f">Неисправность / работы</label>
-    <textarea id="o-problem" placeholder="Межвитковое КЗ, перемотка статора, замена подшипников"></textarea>
-    <label class="f">Обмоточные данные (заполняй при разборке)</label>
-    <div class="row">
-      <div><input type="number" id="o-z" placeholder="Пазов Z₁"></div>
-      <div><input type="number" id="o-turns" placeholder="Витков"></div>
-      <div><input type="text" id="o-wire" placeholder="Провод, мм"></div>
-      <div><input type="text" id="o-scheme" placeholder="Схема / шаг"></div>
-      <div><select id="o-conn"><option value="">Соединение</option><option>Y</option><option>Δ</option><option>Y/Δ</option></select></div>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <div><label class="f">Работа, ₴</label><input type="number" id="o-work" step="0.01" value="0"></div>
-      <div><label class="f">Материалы, ₴</label><input type="number" id="o-parts" step="0.01" value="0"></div>
-      <div><label class="f">Аванс, ₴</label><input type="number" id="o-prepay" step="0.01" value="0"></div>
-      <div><label class="f">Готовность к</label><input type="date" id="o-due"></div>
-    </div>
-    <label class="f">Заметки</label>
-    <textarea id="o-notes" placeholder="Подшипники 6204 ×2, лак КО-916..."></textarea>
-    <div class="dlg-actions">
-      <button class="btn sec" value="cancel" formnovalidate>Отмена</button>
-      <button class="btn" id="btn-save-order" value="ok">Сохранить</button>
-    </div>
-  </form>
-</dialog>
-
 <dialog id="dlg-motor">
   <h3 id="dlg-motor-title">Двигатель в мою базу</h3>
   <form method="dialog" id="form-motor">
@@ -607,57 +518,11 @@ footer b{color:var(--muted)}
   </form>
 </dialog>
 
-<dialog id="dlg-stock">
-  <h3>Позиция склада</h3>
-  <form method="dialog" id="form-stock">
-    <input type="hidden" id="s-id">
-    <div class="row">
-      <div><label class="f">Наименование *</label><input type="text" id="s-name" placeholder="Провод ПЭТВ-2 0.5" required></div>
-      <div><label class="f">Категория</label><select id="s-cat"><option>Провод обмоточный</option><option>Изоляция</option><option>Подшипники</option><option>Лаки и пропитка</option><option>Прочее</option></select></div>
-    </div>
-    <div class="row">
-      <div><label class="f">Остаток</label><input type="number" id="s-qty" step="0.1" value="0"></div>
-      <div><label class="f">Минимум</label><input type="number" id="s-min" step="0.1" value="1"></div>
-      <div><label class="f">Ед. изм.</label><select id="s-unit"><option>кг</option><option>шт</option><option>л</option><option>м</option></select></div>
-    </div>
-    <div class="dlg-actions">
-      <button class="btn sec" value="cancel" formnovalidate>Отмена</button>
-      <button class="btn" value="ok">Сохранить</button>
-    </div>
-  </form>
-</dialog>
-
-<dialog id="dlg-settings">
-  <h3>Данные мастерской</h3>
-  <p style="color:var(--muted);font-size:13px">Подставляются в сообщения клиенту и квитанцию.</p>
-  <form method="dialog" id="form-settings">
-    <div class="row">
-      <div><label class="f">Название</label><input type="text" id="set-name"></div>
-      <div><label class="f">Телефон</label><input type="text" id="set-phone"></div>
-    </div>
-    <div class="dlg-actions">
-      <button class="btn sec" value="cancel" formnovalidate>Отмена</button>
-      <button class="btn" value="ok">Сохранить</button>
-    </div>
-  </form>
-</dialog>
-
-<dialog id="dlg-msg">
-  <h3>Сообщение клиенту</h3>
-  <div class="chipbar" id="msg-tpls" style="margin-top:10px"></div>
-  <textarea id="msg-text" style="min-height:110px"></textarea>
-  <div class="dlg-actions">
-    <button class="btn sec" onclick="dlgMsg.close()">Закрыть</button>
-    <button class="btn sec" id="btn-copy-msg">📋 Копировать</button>
-    <a class="btn" id="btn-wa" target="_blank" style="text-decoration:none">💬 WhatsApp</a>
-  </div>
-</dialog>
-
 </main>
 <footer>
   <b>НАМОТКА</b> — личный портал намотчика электродвигателей · собрано на основе справочника мастерской «Энергоцех»<br>
   Справочные данные ориентировочные — всегда сверяй с фактическими обмоточными данными при разборке двигателя.<br>
-  Заказы, склад и «Мои двигатели» хранятся в этом браузере. Не забывай делать резервную копию (Заказы → Экспорт).
+  «Мои двигатели» хранятся в этом браузере. Резервная копия: Справочник → Мои двигатели → Экспорт.
 </footer>
 <script>
 'use strict';
@@ -741,15 +606,6 @@ const BEARINGS = [
  ['АИР112','6306','6306','180306 / 80306'],
  ['АИР132','6308','6308','180308 / 80308'],
  ['АИР160','6309 (2p=2: 6209)','6309','180309']
-];
-
-/* ============ шаблоны сообщений (из CRM «Энергоцех») ============ */
-const MSG_TPL = [
- {key:'received', name:'Принят', body:'Добрый день! Заказ №{n} ({motor}) принят в работу. О результатах диагностики сообщим. {shop}, тел.: {phone}'},
- {key:'in_work', name:'В работе', body:'Добрый день! Ваш двигатель ({motor}) сейчас в работе. Ориентировочная готовность: {due}. По вопросам — {phone}'},
- {key:'ready', name:'Готов', body:'Добрый день! Ваш {motor} готов к выдаче. Сумма к оплате: {sum} ₴. Ждём вас в {shop}. Тел: {phone}'},
- {key:'debt', name:'Долг', body:'Добрый день! Напоминаем о заказе №{n} ({motor}). Остаток к оплате: {sum} ₴. {shop}, {phone}'},
- {key:'thanks', name:'Спасибо', body:'Добрый день! Спасибо за визит! Заказ №{n} ({motor}) выдан. Хорошего дня! {shop}, {phone}'}
 ];
 
 /* ============ router ============ */
@@ -1038,22 +894,8 @@ renderCapTable();
 drawWinding();
 
 /* ============ хранилище ============ */
-let orders = LS.get('orders', []);
 let motors = LS.get('motors', []);
-let stock = LS.get('stock', null);
-let settings = LS.get('settings', {shop:'Энергоцех', phone:'+38 (096) 970-32-60'});
-if(!stock){ /* стартовый склад — из CRM «Энергоцех» */
-  stock = [
-    {id:1, name:'Провод ПЭВ-2 1.5мм', cat:'Провод обмоточный', qty:0.8, min:2, unit:'кг'},
-    {id:2, name:'Лак термостойкий', cat:'Лаки и пропитка', qty:2, min:5, unit:'л'},
-    {id:3, name:'Подшипник 6205', cat:'Подшипники', qty:3, min:8, unit:'шт'}
-  ];
-  LS.set('stock', stock);
-}
 const uid = () => Date.now() + Math.floor(Math.random()*1000);
-const STATUSES = ['Принят','В работе','Готов','Выдан','Отменён'];
-const ST_CLS = {'Принят':'st-new','В работе':'st-work','Готов':'st-ready','Выдан':'st-done','Отменён':'st-cancel'};
-const NEXT_ST = {'Принят':['В работе','Отменён'],'В работе':['Готов','Отменён'],'Готов':['Выдан','В работе'],'Выдан':[],'Отменён':['Принят']};
 
 /* ============ мои двигатели ============ */
 const dlgMotor = $('#dlg-motor');
@@ -1093,202 +935,9 @@ $('#form-motor').addEventListener('submit', e => {
 });
 $('#search-my').addEventListener('input', renderMy);
 
-/* ============ заказы ============ */
-const dlgOrder = $('#dlg-order');
-let orderFilter = 'all';
-function money(o){ return (+o.work||0) + (+o.parts||0); }
-function debt(o){ return money(o) - (+o.prepay||0); }
-
-function renderOrders(){
-  const q = ($('#search-orders').value||'').toLowerCase();
-  const list = orders
-    .filter(o => orderFilter === 'all' || o.status === orderFilter)
-    .filter(o => !q || `${o.num} ${o.client} ${o.phone} ${o.motor} ${o.problem} ${o.notes}`.toLowerCase().includes(q))
-    .sort((a,b) => b.id - a.id);
-  $('#orders-list').innerHTML = list.map(o => {
-    const wd = (o.z || o.turns || o.wire) ?
-      `<div class="wdata">🌀 Z₁=${esc(o.z||'—')} · витков: ${esc(o.turns||'—')} · провод: ${esc(o.wire||'—')} · схема: ${esc(o.scheme||'—')} · ${esc(o.conn||'')}</div>` : '';
-    const nx = NEXT_ST[o.status].map(s => `<button class="btn sm sec" onclick="setStatus(${o.id},'${s}')">→ ${s}</button>`).join('');
-    const d = debt(o);
-    return `<div class="order-card">
-      <div class="order-head">
-        <span class="order-num">№${o.num}</span>
-        <span class="order-title">${esc(o.client)}</span>
-        <span class="st ${ST_CLS[o.status]}">${o.status}</span>
-        <span style="margin-left:auto;color:var(--muted);font-size:12.5px">${esc(o.date||'')}</span>
-      </div>
-      <div class="order-meta">
-        ${o.motor ? `⚙ <b style="color:var(--text)">${esc(o.motor)}</b>${o.kw?` · ${esc(o.kw)} кВт`:''}${o.rpm?` · ${esc(o.rpm)} об/мин`:''} · ` : ''}
-        ${o.phone ? `📞 ${esc(o.phone)} · ` : ''}
-        💰 ${fmt(money(o))} ₴${(+o.prepay)?` (аванс ${fmt(o.prepay)})`:''}${d>0 && (o.status==='Готов'||o.status==='Выдан')?` · <span class="low">долг ${fmt(d)} ₴</span>`:''}
-        ${o.due?` · ⏰ к ${esc(o.due)}`:''}
-      </div>
-      ${o.problem ? `<div class="order-meta">🔧 ${esc(o.problem)}</div>` : ''}
-      ${wd}
-      ${o.notes ? `<div class="order-meta">📝 ${esc(o.notes)}</div>` : ''}
-      <div class="order-actions">
-        ${nx}
-        <button class="btn sm sec" onclick="editOrder(${o.id})">✏ Изменить</button>
-        ${o.phone ? `<button class="btn sm sec" onclick="openMsg(${o.id})">💬 Сообщение</button>` : ''}
-        <button class="btn sm sec" onclick="printOrder(${o.id})">🖨 Квитанция</button>
-        ${(o.z||o.turns) ? `<button class="btn sm sec" onclick="orderToMy(${o.id})" title="Обмоточные данные в мою базу">⭐ В базу</button>` : ''}
-        <button class="btn sm danger" onclick="delOrder(${o.id})">✕</button>
-      </div>
-    </div>`;
-  }).join('');
-  $('#orders-empty').style.display = list.length ? 'none' : 'block';
-  /* статистика */
-  const c = s => orders.filter(o => o.status === s).length;
-  $('#st-new').textContent = c('Принят'); $('#st-work').textContent = c('В работе'); $('#st-ready').textContent = c('Готов');
-  const totalDebt = orders.filter(o => o.status==='Готов'||o.status==='Выдан').reduce((s,o) => s + Math.max(0, debt(o)), 0);
-  $('#st-debt').textContent = fmt(totalDebt,0) + ' ₴';
-  renderHome();
-}
-function renderHome(){
-  const act = orders.filter(o => ['Принят','В работе','Готов'].includes(o.status)).sort((a,b)=>b.id-a.id).slice(0,5);
-  $('#home-orders').innerHTML = act.length ? act.map(o =>
-    `<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
-      <span class="order-num" style="font-size:13px">№${o.num}</span>
-      <span style="font-size:13.5px">${esc(o.client)}${o.motor?' · '+esc(o.motor):''}</span>
-      <span class="st ${ST_CLS[o.status]}" style="margin-left:auto">${o.status}</span></div>`).join('')
-    : 'Заказов в работе нет — добавь в разделе «Заказы».';
-}
-function openOrderDlg(o){
-  $('#o-id').value = o.id||'';
-  $('#o-date').value = o.date || new Date().toISOString().slice(0,10);
-  $('#o-client').value = o.client||''; $('#o-phone').value = o.phone||'';
-  $('#o-motor').value = o.motor||''; $('#o-kw').value = o.kw||''; $('#o-rpm').value = o.rpm||'';
-  $('#o-problem').value = o.problem||'';
-  $('#o-z').value = o.z||''; $('#o-turns').value = o.turns||''; $('#o-wire').value = o.wire||'';
-  $('#o-scheme').value = o.scheme||''; $('#o-conn').value = o.conn||'';
-  $('#o-work').value = o.work||0; $('#o-parts').value = o.parts||0; $('#o-prepay').value = o.prepay||0;
-  $('#o-due').value = o.due||''; $('#o-notes').value = o.notes||'';
-  $('#dlg-order-title').textContent = o.id ? `Заказ №${o.num}` : 'Новый заказ';
-  dlgOrder.showModal();
-}
-$('#btn-add-order').onclick = () => openOrderDlg({});
-window.editOrder = id => openOrderDlg(orders.find(o => o.id === id));
-window.delOrder = id => { if(confirm('Удалить заказ?')){ orders = orders.filter(o => o.id !== id); LS.set('orders', orders); renderOrders(); } };
-window.setStatus = (id, s) => { const o = orders.find(x => x.id === id); if(o){ o.status = s; LS.set('orders', orders); renderOrders(); } };
-window.orderToMy = id => { const o = orders.find(x => x.id === id); if(o) openMotorDlg({type:o.motor||'', kw:o.kw, p:'', z:o.z, turns:o.turns, wire:o.wire, scheme:o.scheme, conn:o.conn, note:`Из заказа №${o.num} (${o.client})`}); };
-$('#form-order').addEventListener('submit', e => {
-  if(e.submitter && e.submitter.value === 'cancel') return;
-  if(!$('#o-client').value.trim()){ e.preventDefault(); return; }
-  const id = +$('#o-id').value || uid();
-  const ex = orders.find(x => x.id === id);
-  const num = ex ? ex.num : (orders.reduce((m,o) => Math.max(m, +o.num||0), 0) + 1);
-  const o = {id, num, status: ex ? ex.status : 'Принят',
-    date:$('#o-date').value, client:$('#o-client').value.trim(), phone:$('#o-phone').value.trim(),
-    motor:$('#o-motor').value.trim(), kw:$('#o-kw').value, rpm:$('#o-rpm').value,
-    problem:$('#o-problem').value, z:$('#o-z').value, turns:$('#o-turns').value, wire:$('#o-wire').value,
-    scheme:$('#o-scheme').value, conn:$('#o-conn').value,
-    work:$('#o-work').value, parts:$('#o-parts').value, prepay:$('#o-prepay').value,
-    due:$('#o-due').value, notes:$('#o-notes').value};
-  const i = orders.findIndex(x => x.id === id);
-  if(i >= 0) orders[i] = o; else orders.push(o);
-  LS.set('orders', orders); renderOrders();
-});
-$('#order-filter').addEventListener('click', e => {
-  if(e.target.tagName !== 'BUTTON') return;
-  $$('#order-filter button').forEach(b => b.classList.toggle('active', b === e.target));
-  orderFilter = e.target.dataset.f; renderOrders();
-});
-$('#search-orders').addEventListener('input', renderOrders);
-
-/* ============ сообщения клиенту (шаблоны из CRM) ============ */
-const dlgMsg = $('#dlg-msg');
-let msgOrder = null;
-window.openMsg = id => {
-  msgOrder = orders.find(o => o.id === id); if(!msgOrder) return;
-  $('#msg-tpls').innerHTML = MSG_TPL.map((t,i) => `<button onclick="applyTpl(${i})">${t.name}</button>`).join('');
-  applyTpl(msgOrder.status === 'Готов' ? 2 : msgOrder.status === 'В работе' ? 1 : 0);
-  dlgMsg.showModal();
-};
-window.applyTpl = i => {
-  const t = MSG_TPL[i], o = msgOrder;
-  const text = t.body
-    .replace(/{n}/g, o.num).replace(/{motor}/g, o.motor || 'двигатель')
-    .replace(/{sum}/g, fmt(Math.max(0, debt(o)),0))
-    .replace(/{due}/g, o.due || 'уточним')
-    .replace(/{shop}/g, settings.shop).replace(/{phone}/g, settings.phone);
-  $('#msg-text').value = text;
-  $$('#msg-tpls button').forEach((b,j) => b.classList.toggle('active', j === i));
-  updateWa();
-};
-function updateWa(){
-  const digits = (msgOrder.phone||'').replace(/\D/g,'');
-  $('#btn-wa').href = digits ? `https://wa.me/${digits}?text=${encodeURIComponent($('#msg-text').value)}` : '#';
-  $('#btn-wa').style.display = digits ? '' : 'none';
-}
-$('#msg-text').addEventListener('input', updateWa);
-$('#btn-copy-msg').onclick = () => { navigator.clipboard.writeText($('#msg-text').value); $('#btn-copy-msg').textContent = '✓ Скопировано'; setTimeout(() => $('#btn-copy-msg').textContent = '📋 Копировать', 1500); };
-
-/* ============ квитанция ============ */
-window.printOrder = id => {
-  const o = orders.find(x => x.id === id); if(!o) return;
-  const w = window.open('', '_blank');
-  w.document.write(`<html><head><title>Квитанция №${o.num}</title><style>
-    body{font-family:Arial,sans-serif;max-width:640px;margin:24px auto;color:#111;font-size:14px;line-height:1.5}
-    h2{margin:0}.head{border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:14px}
-    table{width:100%;border-collapse:collapse;margin:10px 0}td,th{border:1px solid #999;padding:6px 10px;text-align:left}
-    .tot{font-size:16px;font-weight:bold}.sig{margin-top:36px;display:flex;justify-content:space-between}
-  </style></head><body>
-  <div class="head"><h2>${esc(settings.shop)} — квитанция №${o.num}</h2>
-  <div>Тел.: ${esc(settings.phone)} · Дата приёма: ${esc(o.date||'')}</div></div>
-  <table>
-  <tr><th>Клиент</th><td>${esc(o.client)}${o.phone?', '+esc(o.phone):''}</td></tr>
-  <tr><th>Двигатель</th><td>${esc(o.motor||'—')}${o.kw?', '+esc(o.kw)+' кВт':''}${o.rpm?', '+esc(o.rpm)+' об/мин':''}</td></tr>
-  <tr><th>Неисправность / работы</th><td>${esc(o.problem||'—')}</td></tr>
-  <tr><th>Готовность</th><td>${esc(o.due||'по согласованию')}</td></tr>
-  </table>
-  <table>
-  <tr><th>Работа</th><td>${fmt(+o.work||0)} ₴</td></tr>
-  <tr><th>Материалы</th><td>${fmt(+o.parts||0)} ₴</td></tr>
-  <tr><th>Аванс</th><td>${fmt(+o.prepay||0)} ₴</td></tr>
-  <tr class="tot"><th>К оплате</th><td>${fmt(Math.max(0,debt(o)))} ₴</td></tr>
-  </table>
-  <div class="sig"><span>Принял: ____________</span><span>Сдал: ____________</span></div>
-  <script>window.print()<\/script></body></html>`);
-  w.document.close();
-};
-
-/* ============ настройки мастерской ============ */
-$('#btn-settings').onclick = () => { $('#set-name').value = settings.shop; $('#set-phone').value = settings.phone; $('#dlg-settings').showModal(); };
-$('#form-settings').addEventListener('submit', e => {
-  if(e.submitter && e.submitter.value === 'cancel') return;
-  settings = {shop:$('#set-name').value.trim()||'Мастерская', phone:$('#set-phone').value.trim()};
-  LS.set('settings', settings);
-});
-
-/* ============ склад ============ */
-const dlgStock = $('#dlg-stock');
-function renderStock(){
-  $('#tbl-stock tbody').innerHTML = stock.map(s => {
-    const low = +s.qty < +s.min;
-    return `<tr><td${low?' class="low"':''}><b>${esc(s.name)}</b>${low?' ⚠':''}</td><td>${esc(s.cat)}</td>
-    <td class="num${low?' low':''}">${fmt(s.qty)}</td><td class="num">${fmt(s.min)}</td><td>${esc(s.unit)}</td>
-    <td style="white-space:nowrap"><button class="btn sm sec" onclick="stockQty(${s.id},-1)">−</button> <button class="btn sm sec" onclick="stockQty(${s.id},1)">+</button> <button class="btn sm sec" onclick="editStock(${s.id})">✏</button> <button class="btn sm danger" onclick="delStock(${s.id})">✕</button></td></tr>`;
-  }).join('');
-  $('#stock-empty').style.display = stock.length ? 'none' : 'block';
-}
-window.stockQty = (id, d) => { const s = stock.find(x => x.id === id); if(s){ s.qty = Math.max(0, Math.round((+s.qty + d)*10)/10); LS.set('stock', stock); renderStock(); } };
-window.editStock = id => { const s = stock.find(x => x.id === id); if(!s) return;
-  $('#s-id').value = s.id; $('#s-name').value = s.name; $('#s-cat').value = s.cat; $('#s-qty').value = s.qty; $('#s-min').value = s.min; $('#s-unit').value = s.unit; dlgStock.showModal(); };
-window.delStock = id => { if(confirm('Удалить позицию?')){ stock = stock.filter(s => s.id !== id); LS.set('stock', stock); renderStock(); } };
-$('#btn-add-stock').onclick = () => { $('#s-id').value=''; $('#form-stock').reset(); dlgStock.showModal(); };
-$('#form-stock').addEventListener('submit', e => {
-  if(e.submitter && e.submitter.value === 'cancel') return;
-  if(!$('#s-name').value.trim()){ e.preventDefault(); return; }
-  const id = +$('#s-id').value || uid();
-  const s = {id, name:$('#s-name').value.trim(), cat:$('#s-cat').value, qty:+$('#s-qty').value||0, min:+$('#s-min').value||0, unit:$('#s-unit').value};
-  const i = stock.findIndex(x => x.id === id);
-  if(i >= 0) stock[i] = s; else stock.push(s);
-  LS.set('stock', stock); renderStock();
-});
-
 /* ============ экспорт / импорт ============ */
 $('#btn-export').onclick = () => {
-  const data = {app:'namotka', version:1, exported:new Date().toISOString(), orders, motors, stock, settings};
+  const data = {app:'namotka', version:2, exported:new Date().toISOString(), motors};
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -1303,10 +952,10 @@ $('#import-file').addEventListener('change', e => {
     try{
       const d = JSON.parse(r.result);
       if(d.app !== 'namotka') throw new Error('не тот файл');
-      if(!confirm(`Импортировать резервную копию от ${d.exported ? d.exported.slice(0,10) : '?'}? Текущие данные будут заменены.`)) return;
-      orders = d.orders||[]; motors = d.motors||[]; stock = d.stock||[]; settings = d.settings||settings;
-      LS.set('orders',orders); LS.set('motors',motors); LS.set('stock',stock); LS.set('settings',settings);
-      renderOrders(); renderMy(); renderStock();
+      if(!confirm(`Импортировать копию от ${d.exported ? d.exported.slice(0,10) : '?'}? Текущая база двигателей будет заменена.`)) return;
+      motors = d.motors||[];
+      LS.set('motors', motors);
+      renderMy();
       alert('Импорт выполнен ✓');
     }catch(err){ alert('Ошибка импорта: ' + err.message); }
     e.target.value = '';
@@ -1315,7 +964,7 @@ $('#import-file').addEventListener('change', e => {
 });
 
 /* ============ старт ============ */
-renderOrders(); renderMy(); renderStock();
+renderMy();
 if(location.hash){ const t = location.hash.slice(1); if($('#tab-'+t)) goTab(t); }
 
 </script>

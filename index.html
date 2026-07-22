@@ -820,8 +820,8 @@ function motorRows(){
 }
 const PASS_COLS = [
  {h:'Тип'},{h:'кВт',c:'num'},{h:'2p',c:'num'},{h:'об/мин',c:'num'},{h:'КПД %',c:'num'},{h:'cos φ',c:'num'},{h:'I 380В, А',c:'num'},
- {h:'Внутр. Ø статора, мм',c:'num'},{h:'Нар. Ø статора, мм',c:'num'},{h:'Длина сердечника ~мм',c:'num'},
- {h:'Z₁',c:'num'},{h:'Витков в пазу',c:'num'},{h:'Провод, мм',c:'num'},{h:'Обмотка'},{h:'Соед.'},{h:'Медь ~кг',c:'num'},{h:''}
+ {h:'Ø вн., мм',f:'Внутренний Ø статора, мм',c:'num'},{h:'Ø нар., мм',f:'Наружный Ø статора, мм',c:'num'},{h:'L ~мм',f:'Длина сердечника, мм (оценка)',c:'num'},
+ {h:'Z₁',c:'num'},{h:'Витков',f:'Витков в пазу',c:'num'},{h:'Провод, мм',c:'num'},{h:'Обмотка'},{h:'Соед.'},{h:'Медь ~кг',c:'num'},{h:''}
 ];
 const COL_MODES = {pass:[0,1,2,3,4,5,6], size:[0,1,2,7,8,9], wind:[0,1,2,10,11,12,13,14,15,16], all:PASS_COLS.map((_,i)=>i)};
 let passCols = LS.get('cols','pass');
@@ -836,7 +836,7 @@ function motorCells(m){
 }
 function renderPass(){
   const idx = COL_MODES[passCols];
-  $('#tbl-pass thead').innerHTML = '<tr>' + idx.map(i => `<th class="${PASS_COLS[i].c||''}">${PASS_COLS[i].h}</th>`).join('') + '</tr>';
+  $('#tbl-pass thead').innerHTML = '<tr>' + idx.map(i => `<th class="${PASS_COLS[i].c||''}" title="${PASS_COLS[i].f||''}">${PASS_COLS[i].h}</th>`).join('') + '</tr>';
   $('#tbl-pass tbody').innerHTML = motorRows().map(m => {
     const cells = motorCells(m);
     return `<tr onclick="showMotorCard('${m.t}')">` + idx.map(i => `<td class="${PASS_COLS[i].c||''}">${cells[i]}</td>`).join('') + '</tr>';
@@ -851,7 +851,7 @@ window.showMotorCard = t => {
   if(!m) return;
   const cells = motorCells(m);
   $('#mv-title').textContent = m.t;
-  $('#mv-grid').innerHTML = PASS_COLS.slice(1,16).map((c,i) => `<div class="mi"><div class="ml">${c.h}</div><div class="mv">${cells[i+1]}</div></div>`).join('');
+  $('#mv-grid').innerHTML = PASS_COLS.slice(1,16).map((c,i) => `<div class="mi"><div class="ml">${c.f||c.h}</div><div class="mv">${cells[i+1]}</div></div>`).join('');
   const st = $('#mv-star');
   st.style.display = m.w ? '' : 'none';
   st.onclick = () => { $('#dlg-view').close(); copyToMy(m.t); };

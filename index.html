@@ -114,6 +114,16 @@ textarea{resize:vertical;min-height:64px}
 .mx{width:14px;height:14px;border-radius:3px;background:var(--blue);border:none;cursor:pointer;padding:0;vertical-align:middle}
 .mx:hover{background:var(--accent)}
 .mx1{width:12px;height:12px;border-radius:3px;background:var(--muted);display:inline-block;vertical-align:middle}
+#tbl-pass{min-width:0}
+@media(max-width:640px){#tbl-pass th,#tbl-pass td{padding:6px 6px;font-size:11.5px}#tbl-pass th{font-size:9.5px;letter-spacing:0;white-space:normal;min-width:34px}}
+#tbl-pass tbody tr{cursor:pointer}
+#tbl-pass th:first-child,#tbl-pass td:first-child{position:sticky;left:0;z-index:3;background:var(--card2)}
+#tbl-pass td:first-child{background:var(--bg2)}
+#tbl-pass tbody tr:hover td:first-child{background:#1a1512}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:12px}
+.mgrid .mi{border-bottom:1px solid var(--border);padding-bottom:6px}
+.mgrid .ml{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.mgrid .mv{font-size:15px;font-weight:600;margin-top:2px}
 
 /* ---------- orders ---------- */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
@@ -223,12 +233,18 @@ footer b{color:var(--muted)}
       <button data-s="4А">4А / 4АМ</button>
       <button data-s="АО2">А2 / АО2</button>
     </div>
+    <div class="chipbar" id="cols-pass" style="margin-bottom:10px">
+      <button data-c="pass">Паспорт</button>
+      <button data-c="size">Размеры</button>
+      <button data-c="wind">Обмотка</button>
+      <button data-c="all">Все колонки</button>
+    </div>
     <input class="search" id="search-pass" placeholder="Поиск: АИР80, АО2-32, 1.5, 3000...">
     <div class="tblwrap"><table id="tbl-pass">
-      <thead><tr><th>Тип</th><th class="num">кВт</th><th class="num">2p</th><th class="num">об/мин</th><th class="num">КПД %</th><th class="num">cos φ</th><th class="num">I 380В, А</th><th class="num">Внутр. Ø статора, мм</th><th class="num">Нар. Ø статора, мм</th><th class="num">Длина сердечника ~мм</th><th class="num">Z₁</th><th class="num">Витков в пазу</th><th class="num">Провод, мм</th><th>Обмотка</th><th>Соед.</th><th class="num">Медь ~кг</th><th></th></tr></thead>
+      <thead></thead>
       <tbody></tbody>
     </table></div>
-    <p class="hint">Ток: I = P / (√3 · 380 · КПД · cosφ). КПД и cosφ — типовые каталожные; для А2/АО2 — оценка (старая серия, примерно на 2–3% ниже АИР). Наружный Ø статора — диаметр пакета магнитопровода, стандартный для каждого габарита (основной признак для определения габарита). Внутренний Ø статора — типовой для габарита; у 4/6/8-полюсных лист общий, у 2-полюсных — свой, поменьше. Длина сердечника — расчётная оценка (±20%). Обмер магнитопровода позволяет идентифицировать двигатель при отсутствии заводской таблички. Для АИР/4А крупнее 132 габарита длина не оценивается. Обмотка: 1сл. конц. — однослойная концентрическая, 2сл. — двухслойная, «2×…» — два параллельных провода. Для 4А/4АМ обмоточные колонки показаны по АИР-аналогу того же габарита: серии родственные, но не идентичные — обязательно сверяйте с фактической обмоткой. Прочерк — данных нет: вносите фактические данные обмера через «⭐ Мои двигатели».</p>
+    <p class="hint">Нажатие на строку открывает карточку двигателя со всеми параметрами. Группы колонок переключаются кнопками над таблицей. Ток: I = P / (√3 · 380 · КПД · cosφ). КПД и cosφ — типовые каталожные; для А2/АО2 — оценка (старая серия, примерно на 2–3% ниже АИР). Наружный Ø статора — диаметр пакета магнитопровода, стандартный для каждого габарита (основной признак для определения габарита). Внутренний Ø статора — типовой для габарита; у 4/6/8-полюсных лист общий, у 2-полюсных — свой, поменьше. Длина сердечника — расчётная оценка (±20%). Обмер магнитопровода позволяет идентифицировать двигатель при отсутствии заводской таблички. Для АИР/4А крупнее 132 габарита длина не оценивается. Обмотка: 1сл. конц. — однослойная концентрическая, 2сл. — двухслойная, «2×…» — два параллельных провода. Для 4А/4АМ обмоточные колонки показаны по АИР-аналогу того же габарита: серии родственные, но не идентичные — обязательно сверяйте с фактической обмоткой. Прочерк — данных нет: вносите фактические данные обмера через «⭐ Мои двигатели».</p>
   </div>
 
   <div class="subtab" id="ref-wire">
@@ -505,6 +521,15 @@ footer b{color:var(--muted)}
 </section>
 
 <!-- ================= ДИАЛОГИ ================= -->
+<dialog id="dlg-view">
+  <h3 id="mv-title">Двигатель</h3>
+  <div class="mgrid" id="mv-grid"></div>
+  <div class="dlg-actions">
+    <button class="btn sec" onclick="document.getElementById('dlg-view').close()">Закрыть</button>
+    <button class="btn" id="mv-star">⭐ В мою базу</button>
+  </div>
+</dialog>
+
 <dialog id="dlg-motor">
   <h3 id="dlg-motor-title">Двигатель в мою базу</h3>
   <form method="dialog" id="form-motor">
@@ -793,14 +818,45 @@ function motorRows(){
     return {t:w[0], p:w[1], p2:w[2], n:N[w[2]], eff:a?Math.round((a[4]-2.5)*10)/10:'', cos:a?Math.round((a[5]-0.02)*100)/100:'', w};
   });
 }
-function renderPass(){
-  $('#tbl-pass tbody').innerHTML = motorRows().map(m => {
-    const I = m.eff !== '' ? m.p*1000/(1.732*380*(m.eff/100)*m.cos) : null;
-    const w = m.w;
-    const g = geom(m.t, m.p2, m.p);
-    return `<tr><td><b>${m.t}</b></td><td class="num">${fmt(m.p)}</td><td class="num">${m.p2}</td><td class="num">${m.n}</td><td class="num">${m.eff!==''?fmt(m.eff,1):'—'}</td><td class="num">${m.cos!==''?fmt(m.cos):'—'}</td><td class="num"><b style="color:var(--accent2)">${I?fmt(I,1):'—'}</b></td><td class="num">${g?g.D:'—'}</td><td class="num">${g?g.dn:'—'}</td><td class="num">${g&&g.l?g.l:'—'}</td><td class="num">${w?w[3]:'—'}</td><td class="num">${w?w[4]:'—'}</td><td class="num">${w?w[5]:'—'}</td><td>${w?w[6]:'—'}</td><td>${w?w[7]:'—'}</td><td class="num">${w?fmt(w[8],1):'—'}</td><td>${w?`<button class="btn sm sec" title="Скопировать в мою базу" onclick="copyToMy('${m.t}')">⭐</button>`:''}</td></tr>`;
-  }).join('');
+const PASS_COLS = [
+ {h:'Тип'},{h:'кВт',c:'num'},{h:'2p',c:'num'},{h:'об/мин',c:'num'},{h:'КПД %',c:'num'},{h:'cos φ',c:'num'},{h:'I 380В, А',c:'num'},
+ {h:'Внутр. Ø статора, мм',c:'num'},{h:'Нар. Ø статора, мм',c:'num'},{h:'Длина сердечника ~мм',c:'num'},
+ {h:'Z₁',c:'num'},{h:'Витков в пазу',c:'num'},{h:'Провод, мм',c:'num'},{h:'Обмотка'},{h:'Соед.'},{h:'Медь ~кг',c:'num'},{h:''}
+];
+const COL_MODES = {pass:[0,1,2,3,4,5,6], size:[0,1,2,7,8,9], wind:[0,1,2,10,11,12,13,14,15,16], all:PASS_COLS.map((_,i)=>i)};
+let passCols = LS.get('cols','pass');
+if(!COL_MODES[passCols]) passCols = 'pass';
+function motorCells(m){
+  const I = m.eff !== '' ? m.p*1000/(1.732*380*(m.eff/100)*m.cos) : null;
+  const w = m.w, g = geom(m.t, m.p2, m.p);
+  return [`<b>${m.t}</b>`, fmt(m.p), m.p2, m.n, m.eff!==''?fmt(m.eff,1):'—', m.cos!==''?fmt(m.cos):'—',
+   `<b style="color:var(--accent2)">${I?fmt(I,1):'—'}</b>`, g?g.D:'—', g?g.dn:'—', g&&g.l?g.l:'—',
+   w?w[3]:'—', w?w[4]:'—', w?w[5]:'—', w?w[6]:'—', w?w[7]:'—', w?fmt(w[8],1):'—',
+   w?`<button class="btn sm sec" title="Скопировать в мою базу" onclick="event.stopPropagation();copyToMy('${m.t}')">⭐</button>`:''];
 }
+function renderPass(){
+  const idx = COL_MODES[passCols];
+  $('#tbl-pass thead').innerHTML = '<tr>' + idx.map(i => `<th class="${PASS_COLS[i].c||''}">${PASS_COLS[i].h}</th>`).join('') + '</tr>';
+  $('#tbl-pass tbody').innerHTML = motorRows().map(m => {
+    const cells = motorCells(m);
+    return `<tr onclick="showMotorCard('${m.t}')">` + idx.map(i => `<td class="${PASS_COLS[i].c||''}">${cells[i]}</td>`).join('') + '</tr>';
+  }).join('');
+  const q = ($('#search-pass').value || '').toLowerCase().replace(',','.');
+  if(q) $$('#tbl-pass tbody tr').forEach(tr => {
+    tr.style.display = tr.textContent.toLowerCase().replace(/,/g,'.').includes(q) ? '' : 'none';
+  });
+}
+window.showMotorCard = t => {
+  const m = motorRows().find(x => x.t === t);
+  if(!m) return;
+  const cells = motorCells(m);
+  $('#mv-title').textContent = m.t;
+  $('#mv-grid').innerHTML = PASS_COLS.slice(1,16).map((c,i) => `<div class="mi"><div class="ml">${c.h}</div><div class="mv">${cells[i+1]}</div></div>`).join('');
+  const st = $('#mv-star');
+  st.style.display = m.w ? '' : 'none';
+  st.onclick = () => { $('#dlg-view').close(); copyToMy(m.t); };
+  $('#dlg-view').showModal();
+};
 function renderWire(){
   const J = +$('#wire-j').value;
   $('#tbl-wire tbody').innerHTML = WIRE_D.map(d => {
@@ -828,6 +884,13 @@ $('#series-pass').addEventListener('click', e => {
   $$('#series-pass button').forEach(b => b.classList.toggle('active', b === e.target));
   passSeries = e.target.dataset.s; renderPass();
 });
+$('#cols-pass').addEventListener('click', e => {
+  if(e.target.tagName !== 'BUTTON') return;
+  passCols = e.target.dataset.c; LS.set('cols', passCols);
+  $$('#cols-pass button').forEach(b => b.classList.toggle('active', b.dataset.c === passCols));
+  renderPass();
+});
+$$('#cols-pass button').forEach(b => b.classList.toggle('active', b.dataset.c === passCols));
 
 /* ============ калькуляторы ============ */
 function showRes(id, html){ const el = $(id); el.innerHTML = html; el.classList.add('show'); }

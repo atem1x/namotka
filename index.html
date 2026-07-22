@@ -220,10 +220,10 @@ footer b{color:var(--muted)}
     </div>
     <input class="search" id="search-pass" placeholder="Поиск: АИР80, АО2-32, 1.5, 3000...">
     <div class="tblwrap"><table id="tbl-pass">
-      <thead><tr><th>Тип</th><th class="num">кВт</th><th class="num">2p</th><th class="num">об/мин</th><th class="num">КПД %</th><th class="num">cos φ</th><th class="num">I 380В, А</th><th class="num">Z₁</th><th class="num">Витков в пазу</th><th class="num">Провод, мм</th><th>Обмотка</th><th>Соед.</th><th class="num">Медь ~кг</th><th></th></tr></thead>
+      <thead><tr><th>Тип</th><th class="num">кВт</th><th class="num">2p</th><th class="num">об/мин</th><th class="num">КПД %</th><th class="num">cos φ</th><th class="num">I 380В, А</th><th class="num">Расточка ~мм</th><th class="num">Жесть Ø, мм</th><th class="num">Железо ~мм</th><th class="num">Z₁</th><th class="num">Витков в пазу</th><th class="num">Провод, мм</th><th>Обмотка</th><th>Соед.</th><th class="num">Медь ~кг</th><th></th></tr></thead>
       <tbody></tbody>
     </table></div>
-    <p class="hint">Ток: I = P / (√3 · 380 · КПД · cosφ). КПД и cosφ — типовые каталожные; для А2/АО2 — оценка (старая серия, примерно на 2–3% ниже АИР). Обмотка: 1сл. конц. — однослойная концентрическая, 2сл. — двухслойная, «2×…» — две параллельные жилы. Для 4А/4АМ обмоточные колонки показаны по АИР-аналогу того же габарита: серии родственные, но не идентичные — обязательно сверяй с фактической обмоткой. Прочерк — данных нет: заноси свои замеры через «⭐ Мои двигатели».</p>
+    <p class="hint">Ток: I = P / (√3 · 380 · КПД · cosφ). КПД и cosφ — типовые каталожные; для А2/АО2 — оценка (старая серия, примерно на 2–3% ниже АИР). Жесть Ø — стандартный наружный диаметр статорного железа для габарита. Расточка и длина железа — расчётная оценка (±20%) для опознания двигателя без шильдика: замерил железо — сравнил с таблицей. Для АИР/4А крупнее 132 габарита длина не оценивается. Обмотка: 1сл. конц. — однослойная концентрическая, 2сл. — двухслойная, «2×…» — две параллельные жилы. Для 4А/4АМ обмоточные колонки показаны по АИР-аналогу того же габарита: серии родственные, но не идентичные — обязательно сверяй с фактической обмоткой. Прочерк — данных нет: заноси свои замеры через «⭐ Мои двигатели».</p>
   </div>
 
   <div class="subtab" id="ref-wire">
@@ -743,6 +743,24 @@ function nearestAir(p2, P){
   AIR_PASS.forEach(r => { if(r[2] === p2 && (!best || Math.abs(r[1]-P) < Math.abs(best[1]-P))) best = r; });
   return best;
 }
+const DN_FRAME = {
+  'АИР': {56:89, 63:100, 71:116, 80:131, 90:149, 100:168, 112:191, 132:225, 160:272, 180:313, 200:349, 225:392, 250:437},
+  'АО2': {11:116, 12:116, 21:131, 22:131, 31:149, 32:149, 41:168, 42:168, 51:191, 52:191, 61:225, 62:225}
+};
+const KD_POLE = {2:0.55, 4:0.65, 6:0.7, 8:0.74};
+const KP_POLE = {2:1.3, 4:1.0, 6:0.92, 8:0.85};
+function geom(t, p2, P){
+  const fr = (t.match(/\d+/g) || []).map(Number);
+  const frame = (t.indexOf('АО2') === 0 || t.indexOf('4А') === 0) ? fr[1] : fr[0];
+  const dn = t.indexOf('АО2') === 0 ? DN_FRAME['АО2'][frame] : DN_FRAME['АИР'][frame];
+  if(!dn) return null;
+  const D = Math.round(dn * KD_POLE[p2]);
+  const ns = 6000 / p2;
+  const C = 0.9 * Math.pow(P, 0.33);
+  let l = Math.round(P * 1e6 / (C * Math.pow(D/10, 2) * ns) * 10 / 5) * 5;
+  if(t.indexOf('АО2') !== 0 && frame > 132) l = null;
+  return {D, dn, l};
+}
 function motorRows(){
   if(passSeries === 'АИР') return AIR_PASS.map(r => ({t:r[0], p:r[1], p2:r[2], n:r[3], eff:r[4], cos:r[5], w:WIND_BY_TYPE[r[0]]}));
   if(passSeries === '4А') return A4_PASS.map(r => ({t:r[0], p:r[1], p2:r[2], n:r[3], eff:r[4], cos:r[5], w:WIND_BY_TYPE['АИР' + r[0].slice(2)] || null}));
@@ -756,7 +774,8 @@ function renderPass(){
   $('#tbl-pass tbody').innerHTML = motorRows().map(m => {
     const I = m.eff !== '' ? m.p*1000/(1.732*380*(m.eff/100)*m.cos) : null;
     const w = m.w;
-    return `<tr><td><b>${m.t}</b></td><td class="num">${fmt(m.p)}</td><td class="num">${m.p2}</td><td class="num">${m.n}</td><td class="num">${m.eff!==''?fmt(m.eff,1):'—'}</td><td class="num">${m.cos!==''?fmt(m.cos):'—'}</td><td class="num"><b style="color:var(--accent2)">${I?fmt(I,1):'—'}</b></td><td class="num">${w?w[3]:'—'}</td><td class="num">${w?w[4]:'—'}</td><td class="num">${w?w[5]:'—'}</td><td>${w?w[6]:'—'}</td><td>${w?w[7]:'—'}</td><td class="num">${w?fmt(w[8],1):'—'}</td><td>${w?`<button class="btn sm sec" title="Скопировать в мою базу" onclick="copyToMy('${m.t}')">⭐</button>`:''}</td></tr>`;
+    const g = geom(m.t, m.p2, m.p);
+    return `<tr><td><b>${m.t}</b></td><td class="num">${fmt(m.p)}</td><td class="num">${m.p2}</td><td class="num">${m.n}</td><td class="num">${m.eff!==''?fmt(m.eff,1):'—'}</td><td class="num">${m.cos!==''?fmt(m.cos):'—'}</td><td class="num"><b style="color:var(--accent2)">${I?fmt(I,1):'—'}</b></td><td class="num">${g?g.D:'—'}</td><td class="num">${g?g.dn:'—'}</td><td class="num">${g&&g.l?g.l:'—'}</td><td class="num">${w?w[3]:'—'}</td><td class="num">${w?w[4]:'—'}</td><td class="num">${w?w[5]:'—'}</td><td>${w?w[6]:'—'}</td><td>${w?w[7]:'—'}</td><td class="num">${w?fmt(w[8],1):'—'}</td><td>${w?`<button class="btn sm sec" title="Скопировать в мою базу" onclick="copyToMy('${m.t}')">⭐</button>`:''}</td></tr>`;
   }).join('');
 }
 function renderWire(){

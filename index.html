@@ -204,8 +204,7 @@ footer b{color:var(--muted)}
   <h2 class="section-title">Справочник</h2>
   <p class="section-sub">Таблицы для повседневной работы. Данные из справочников — ориентировочные: двигатели разных заводов и годов отличаются.</p>
   <div class="pills" id="ref-pills">
-    <button data-sub="ref-pass" class="active">Паспортные данные</button>
-    <button data-sub="ref-wind">Обмоточные данные</button>
+    <button data-sub="ref-pass" class="active">Двигатели</button>
     <button data-sub="ref-wire">Провода</button>
     <button data-sub="ref-bear">Подшипники</button>
     <button data-sub="ref-misc">Изоляция и маркировка</button>
@@ -213,30 +212,18 @@ footer b{color:var(--muted)}
   </div>
 
   <div class="subtab active" id="ref-pass">
+    <div class="warn-note">⚠ Обмоточные колонки (Z₁, витки, провод) — <b>ориентировочные</b>, по справочникам. Заводы и годы выпуска отличаются! Перед перемоткой всегда записывай фактические данные: число витков, диаметр провода, схему и шаг. Проверенные данные сохраняй во вкладке «⭐ Мои двигатели».</div>
     <div class="chipbar" id="series-pass" style="margin-bottom:10px">
       <button data-s="АИР" class="active">АИР / АИРМ</button>
       <button data-s="4А">4А / 4АМ</button>
-    </div>
-    <input class="search" id="search-pass" placeholder="Поиск: АИР80, 1.5, 3000...">
-    <div class="tblwrap"><table id="tbl-pass">
-      <thead><tr><th>Тип</th><th class="num">кВт</th><th class="num">2p</th><th class="num">об/мин</th><th class="num">КПД %</th><th class="num">cos φ</th><th class="num">I при 380 В, А</th></tr></thead>
-      <tbody></tbody>
-    </table></div>
-    <p class="hint">Ток рассчитан по формуле I = P / (√3 · 380 · КПД · cosφ). КПД и cosφ — типовые каталожные значения. У серии 4А/4АМ сетка мощностей совпадает с АИР, КПД примерно на 1% ниже (пересчитано). Габариты 56–100 обычно 220/380 В (Y на 380), от 112 — часто 380 Δ / 660 Y.</p>
-  </div>
-
-  <div class="subtab" id="ref-wind">
-    <div class="warn-note">⚠ Обмоточные данные — <b>ориентировочные</b>, по справочникам для серии АИР (одна из распространённых модификаций). Заводы отличаются! Перед перемоткой всегда записывай фактические данные: число витков, диаметр провода, схему и шаг. Проверенные данные сохраняй во вкладке «⭐ Мои двигатели».</div>
-    <div class="chipbar" id="series-wind" style="margin-bottom:10px">
-      <button data-s="АИР" class="active">АИР / АИРМ</button>
       <button data-s="АО2">А2 / АО2</button>
     </div>
-    <input class="search" id="search-wind" placeholder="Поиск: АИР71, 24 паза...">
-    <div class="tblwrap"><table id="tbl-wind">
-      <thead><tr><th>Тип</th><th class="num">кВт</th><th class="num">2p</th><th class="num">Пазов Z₁</th><th class="num">Витков в пазу</th><th class="num">Провод ПЭТВ, мм</th><th>Обмотка</th><th>Соед.</th><th class="num">Медь ~кг</th><th></th></tr></thead>
+    <input class="search" id="search-pass" placeholder="Поиск: АИР80, АО2-32, 1.5, 3000...">
+    <div class="tblwrap"><table id="tbl-pass">
+      <thead><tr><th>Тип</th><th class="num">кВт</th><th class="num">2p</th><th class="num">об/мин</th><th class="num">КПД %</th><th class="num">cos φ</th><th class="num">I 380В, А</th><th class="num">Z₁</th><th class="num">Витков в пазу</th><th class="num">Провод, мм</th><th>Обмотка</th><th>Соед.</th><th class="num">Медь ~кг</th><th></th></tr></thead>
       <tbody></tbody>
     </table></div>
-    <p class="hint">Обмотка: 1сл. конц. — однослойная концентрическая, 2сл. — двухслойная. «2×…» — намотка в две параллельные жилы. Серия А2/АО2 — старая единая серия: АО2 — закрытое обдуваемое исполнение, А2 — защищённое; у А2 того же габарита данные близки к АО2, но не идентичны. Для крупных габаритов разброс между заводами особенно велик — обязательно сверяй с фактической обмоткой и заноси замеры в «Мои двигатели» (кнопка ⭐ копирует строку туда).</p>
+    <p class="hint">Ток: I = P / (√3 · 380 · КПД · cosφ). КПД и cosφ — типовые каталожные; для А2/АО2 — оценка (старая серия, примерно на 2–3% ниже АИР). Обмотка: 1сл. конц. — однослойная концентрическая, 2сл. — двухслойная, «2×…» — две параллельные жилы. Прочерк — данных нет: у 4А/4АМ сетка мощностей как у АИР, но обмоточные данные другие — заноси свои замеры через «⭐ Мои двигатели».</p>
   </div>
 
   <div class="subtab" id="ref-wire">
@@ -749,19 +736,28 @@ initSubtabs('ref-pills'); initSubtabs('sch-pills');
 /* ============ справочник: рендер таблиц ============ */
 const A4_PASS = AIR_PASS.map(r => ['4А' + r[0].slice(3), r[1], r[2], Math.max(600, r[3]-10), Math.round((r[4]-1)*10)/10, r[5]]);
 let passSeries = 'АИР';
-function renderPass(){
-  const rows = passSeries === 'АИР' ? AIR_PASS : A4_PASS;
-  $('#tbl-pass tbody').innerHTML = rows.map(r => {
-    const I = r[1]*1000/(1.732*380*(r[4]/100)*r[5]);
-    return `<tr><td><b>${r[0]}</b></td><td class="num">${fmt(r[1])}</td><td class="num">${r[2]}</td><td class="num">${r[3]}</td><td class="num">${fmt(r[4],1)}</td><td class="num">${fmt(r[5])}</td><td class="num"><b style="color:var(--accent2)">${fmt(I,1)}</b></td></tr>`;
-  }).join('');
+const WIND_BY_TYPE = {};
+AIR_WIND.forEach(r => WIND_BY_TYPE[r[0]] = r);
+function nearestAir(p2, P){
+  let best = null;
+  AIR_PASS.forEach(r => { if(r[2] === p2 && (!best || Math.abs(r[1]-P) < Math.abs(best[1]-P))) best = r; });
+  return best;
 }
-let windSeries = 'АИР';
-function renderWind(){
-  const rows = windSeries === 'АИР' ? AIR_WIND : AO2_WIND;
-  $('#tbl-wind tbody').innerHTML = rows.map((r,i) =>
-    `<tr><td><b>${r[0]}</b></td><td class="num">${fmt(r[1])}</td><td class="num">${r[2]}</td><td class="num">${r[3]}</td><td class="num">${r[4]}</td><td class="num">${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td><td class="num">${fmt(r[8],1)}</td><td><button class="btn sm sec" title="Скопировать в мою базу" onclick="copyToMy(${i})">⭐</button></td></tr>`
-  ).join('');
+function motorRows(){
+  if(passSeries === 'АИР') return AIR_PASS.map(r => ({t:r[0], p:r[1], p2:r[2], n:r[3], eff:r[4], cos:r[5], w:WIND_BY_TYPE[r[0]]}));
+  if(passSeries === '4А') return A4_PASS.map(r => ({t:r[0], p:r[1], p2:r[2], n:r[3], eff:r[4], cos:r[5], w:null}));
+  const N = {2:2860, 4:1430, 6:950, 8:720};
+  return AO2_WIND.map(w => {
+    const a = nearestAir(w[2], w[1]);
+    return {t:w[0], p:w[1], p2:w[2], n:N[w[2]], eff:a?Math.round((a[4]-2.5)*10)/10:'', cos:a?Math.round((a[5]-0.02)*100)/100:'', w};
+  });
+}
+function renderPass(){
+  $('#tbl-pass tbody').innerHTML = motorRows().map(m => {
+    const I = m.eff !== '' ? m.p*1000/(1.732*380*(m.eff/100)*m.cos) : null;
+    const w = m.w;
+    return `<tr><td><b>${m.t}</b></td><td class="num">${fmt(m.p)}</td><td class="num">${m.p2}</td><td class="num">${m.n}</td><td class="num">${m.eff!==''?fmt(m.eff,1):'—'}</td><td class="num">${m.cos!==''?fmt(m.cos):'—'}</td><td class="num"><b style="color:var(--accent2)">${I?fmt(I,1):'—'}</b></td><td class="num">${w?w[3]:'—'}</td><td class="num">${w?w[4]:'—'}</td><td class="num">${w?w[5]:'—'}</td><td>${w?w[6]:'—'}</td><td>${w?w[7]:'—'}</td><td class="num">${w?fmt(w[8],1):'—'}</td><td>${w?`<button class="btn sm sec" title="Скопировать в мою базу" onclick="copyToMy('${m.t}')">⭐</button>`:''}</td></tr>`;
+  }).join('');
 }
 function renderWire(){
   const J = +$('#wire-j').value;
@@ -782,18 +778,13 @@ function tableFilter(inputId, tableId){
     });
   });
 }
-renderPass(); renderWind(); renderWire(); renderBear();
-tableFilter('search-pass','tbl-pass'); tableFilter('search-wind','tbl-wind'); tableFilter('search-wire','tbl-wire');
+renderPass(); renderWire(); renderBear();
+tableFilter('search-pass','tbl-pass'); tableFilter('search-wire','tbl-wire');
 $('#wire-j').onchange = renderWire;
 $('#series-pass').addEventListener('click', e => {
   if(e.target.tagName !== 'BUTTON') return;
   $$('#series-pass button').forEach(b => b.classList.toggle('active', b === e.target));
   passSeries = e.target.dataset.s; renderPass();
-});
-$('#series-wind').addEventListener('click', e => {
-  if(e.target.tagName !== 'BUTTON') return;
-  $$('#series-wind button').forEach(b => b.classList.toggle('active', b === e.target));
-  windSeries = e.target.dataset.s; renderWind();
 });
 
 /* ============ калькуляторы ============ */
@@ -1052,8 +1043,9 @@ function openMotorDlg(m){
 }
 window.editMotor = id => openMotorDlg(motors.find(m => m.id === id));
 window.delMotor = id => { if(confirm('Удалить запись?')){ motors = motors.filter(m => m.id !== id); LS.set('motors', motors); renderMy(); } };
-window.copyToMy = i => {
-  const r = (windSeries === 'АИР' ? AIR_WIND : AO2_WIND)[i];
+window.copyToMy = t => {
+  const r = AIR_WIND.find(x => x[0] === t) || AO2_WIND.find(x => x[0] === t);
+  if(!r) return;
   openMotorDlg({type:r[0], kw:r[1], p:r[2], z:r[3], turns:r[4], wire:r[5], scheme:r[6], conn:r[7], note:'Из справочника (ориентировочно) — проверить при разборке'});
   goTab('ref');
 };
